@@ -1,0 +1,4 @@
+interface:
+  display_name: "Procedural Skills"
+  short_description: "Develop and maintain Codex skills"
+  default_prompt: "Use $procedural-skills to develop a Codex skill according to the repository standards."

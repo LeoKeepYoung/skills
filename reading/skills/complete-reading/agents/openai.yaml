@@ -1,0 +1,4 @@
+interface:
+  display_name: "读后复盘"
+  short_description: "回扫微信读书笔记，完成总结、三问、输出选题与递进推荐"
+  default_prompt: "使用 $complete-reading 在读完后回扫笔记，完成复盘并推荐输出选题。"

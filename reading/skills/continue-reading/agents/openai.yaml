@@ -1,0 +1,4 @@
+interface:
+  display_name: "读中陪伴"
+  short_description: "建立 Obsidian 书籍笔记，跟踪进度并沉淀讨论"
+  default_prompt: "使用 $continue-reading 开始或继续这本书的阅读记录。"

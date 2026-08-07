@@ -1,4 +1,4 @@
 interface:
-  display_name: "Reading Coach"
-  short_description: "Build evidence-aware maps before reading a book"
-  default_prompt: "Use $reading to build a careful pre-reading map for this book."
+  display_name: "Reading"
+  short_description: "管理一本书从读前准备、读中记录到读后复盘的完整周期"
+  default_prompt: "使用 $reading 判断我当前的阅读阶段，并继续这本书的阅读流程。"

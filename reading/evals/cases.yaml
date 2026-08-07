@@ -1,10 +1,102 @@
-schema_version: "1.0"
+schema_version: "2.1"
 cases:
-  - id: literary-experience
-    book_request:
-      title: 每一句话语都坐着别的眼睛
-      language: zh-CN
+  - id: pre-reading-dual-platform
+    request:
+      text: 为《如何阅读一本书》做读前准备
+      stage: planned
     expected:
+      skill: prepare-reading
+      checks:
+        - 豆瓣结果绑定具体 subject 页面与版本
+        - 豆瓣和微信读书都展示评分与评分人数
+        - 微信读书 readingCount 不被误作评分人数
+        - 作品写作区间与出版时间明确区分
+        - 默认使用层级克制、表格紧凑的结构化阅读指南
+        - 检索过程与调试信息不出现在读前正文
+        - 未确认阅读前不创建 Obsidian 文件
+
+  - id: active-reading-confirmation-block
+    request:
+      text: 帮我为这本书建阅读笔记
+      stage: planned
+      obsidian_folder: null
+    expected:
+      skill: continue-reading
+      checks:
+        - 询问是否已经决定开始阅读
+        - 询问 Obsidian 目标文件夹
+        - 门槛未满足时不创建文件
+
+  - id: active-reading-progress
+    request:
+      text: 我已经开始读了，同步一下进度
+      stage: reading
+      obsidian_folder: confirmed
+    expected:
+      skill: continue-reading
+      checks:
+        - 使用 getprogress 的 0 到 100 精确值
+        - 微信读书不可用时采用人工进度并标明来源
+        - 保留受管区块外的用户笔记
+
+  - id: active-reading-disagreement
+    request:
+      text: 讨论后我仍不同意你的解释
+      stage: reading
+    expected:
+      skill: continue-reading
+      checks:
+        - 快照保留用户困惑
+        - 一致观点写未达成一致
+        - 不替用户制造共识
+
+  - id: post-reading-incomplete-block
+    request:
+      text: 帮我做读后总结
+      stage: reading
+      progress_percent: 82
+      manual_completion_confirmed: false
+    expected:
+      skill: complete-reading
+      checks:
+        - 报告当前进度
+        - 不回扫或生成读后总结
+        - 等待完成或明确手动确认
+
+  - id: post-reading-full-review
+    request:
+      text: 我读完了，开始复盘
+      stage: completed
+    expected:
+      skill: complete-reading
+      checks:
+        - 同时读取全部划线和分页的我的想法
+        - 将直接记录与系统推测分开
+        - 展示三个问题并逐题交互
+        - 结合画像笔记讨论推荐一到三个输出选题
+        - 用户确认前所有选题保持待决定
+        - 只有用户有兴趣时才推荐后续书籍
+
+  - id: post-reading-output-topic-decision
+    request:
+      text: 这些选题我只采纳第二个，第一个暂缓，第三个不要
+      stage: completed
+      output_topics_status: awaiting_decision
+    expected:
+      skill: complete-reading
+      checks:
+        - 忠实记录第二个为采纳
+        - 忠实记录第一个为暂缓
+        - 忠实记录第三个为不采纳
+        - 未经用户要求不直接创作第二个选题
+        - 不因拒绝选题而施压或反复推荐
+
+  - id: literary-experience
+    request:
+      text: 为《每一句话语都坐着别的眼睛》做读前准备
+      stage: planned
+    expected:
+      skill: prepare-reading
       primary_mode: experience
       checks:
         - 解释语言、时代与日常不安全感之间的关系
@@ -13,10 +105,11 @@ cases:
         - 未获得正文时不虚构具体意象或篇章
 
   - id: method-book
-    book_request:
-      title: 金字塔原理
-      language: zh-CN
+    request:
+      text: 为《金字塔原理》做读前准备
+      stage: planned
     expected:
+      skill: prepare-reading
       primary_mode: method
       checks:
         - Context 与 Author 保持简短
@@ -25,10 +118,11 @@ cases:
         - 区分不同版本的内容差异
 
   - id: argument-book
-    book_request:
-      title: 幸福之路
-      language: zh-CN
+    request:
+      text: 为《幸福之路》做读前准备
+      stage: planned
     expected:
+      skill: prepare-reading
       primary_mode: argument
       checks:
         - 提炼概念与论证结构
@@ -37,10 +131,11 @@ cases:
         - 不把争议解释写成事实
 
   - id: knowledge-book
-    book_request:
-      title: Designing Data-Intensive Applications
-      language: zh-CN
+    request:
+      text: 为《Designing Data-Intensive Applications》做读前准备
+      stage: planned
     expected:
+      skill: prepare-reading
       primary_mode: knowledge
       checks:
         - 识别前置知识

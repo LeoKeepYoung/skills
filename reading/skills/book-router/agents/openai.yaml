@@ -1,4 +1,0 @@
-interface:
-  display_name: "Book Router"
-  short_description: "Choose reading modes and three-layer analysis weights"
-  default_prompt: "Use $book-router to choose the reading mode and analysis weights for this book."

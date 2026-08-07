@@ -6,4 +6,7 @@ Skill 的核心入口文件通常是 `SKILL.md`，可按需要继续补充 `agen
 
 ## Skills
 
-- [`reading`](reading/SKILL.md)：从时代、作者、作品三个层面生成有证据边界的阅读地图。
+- [`reading`](reading/SKILL.md)：一本书从读前准备、读中记录到读后复盘的生命周期路由器。
+  - [`prepare-reading`](reading/skills/prepare-reading/SKILL.md)：豆瓣与微信读书检索、作者/创作背景和个性化阅读策略。
+  - [`continue-reading`](reading/skills/continue-reading/SKILL.md)：确认阅读后建立 Obsidian 文件、同步进度并沉淀讨论。
+  - [`complete-reading`](reading/skills/complete-reading/SKILL.md)：读完后回扫划线与想法、完成总结和三问、推荐输出选题，可选推荐后续书籍。

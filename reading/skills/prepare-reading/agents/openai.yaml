@@ -1,0 +1,4 @@
+interface:
+  display_name: "读前准备"
+  short_description: "检索双平台书讯和作者背景，并结合个人阅读记录制定进入策略"
+  default_prompt: "使用 $prepare-reading 为这本书完成读前研究和个性化阅读策略。"

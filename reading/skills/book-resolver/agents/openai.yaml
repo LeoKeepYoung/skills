@@ -1,4 +1,0 @@
-interface:
-  display_name: "Book Resolver"
-  short_description: "Resolve book identity, editions, and analysis scope"
-  default_prompt: "Use $book-resolver to identify this book and its analysis scope."

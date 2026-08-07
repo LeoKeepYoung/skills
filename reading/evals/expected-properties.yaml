@@ -1,5 +1,35 @@
-schema_version: "1.0"
+schema_version: "2.1"
 required_properties:
+  structure:
+    - only_router_and_three_stage_skills_are_discoverable
+    - pre_reading_analysis_components_are_references
+    - legacy_reading_map_ir_artifacts_are_absent
+  lifecycle:
+    - stage_is_explicitly_routed
+    - reading_requires_user_confirmation_and_folder
+    - completion_requires_exact_100_or_manual_confirmation
+    - no_automatic_cross_stage_execution
+  ratings:
+    - douban_subject_page_and_edition_are_bound
+    - both_platforms_include_rating_count
+    - ratings_include_access_time
+    - reading_count_is_not_rating_count
+  obsidian:
+    - one_book_uses_one_markdown_file
+    - managed_blocks_are_idempotent
+    - user_content_outside_markers_is_preserved
+    - progress_source_is_explicit
+    - disagreement_is_not_rewritten_as_consensus
+  post_reading:
+    - underlines_and_personal_ideas_are_both_scanned
+    - paginated_results_are_exhausted_or_disclosed
+    - direct_notes_are_separated_from_inference
+    - unanswered_questions_are_not_fabricated
+    - output_topics_are_limited_to_one_to_three
+    - output_topics_use_authorized_profile_notes_and_discussions
+    - topic_adoption_requires_explicit_user_choice
+    - rejected_or_deferred_topics_are_recorded_faithfully
+    - recommendations_require_user_interest
   identity:
     - identification_confidence_gte_0_8
     - edition_ambiguity_resolved_or_blocked
@@ -20,13 +50,15 @@ required_properties:
     - context_to_work_has_mechanism
   reading_value:
     - has_specific_reading_focus
-    - has_misreading_and_correction
     - has_observation_question
-    - has_transfer_boundary
+    - reading_route_combines_focus_reminders_and_transfer_boundaries
+    - reading_reminder_contains_misreading_correction_when_needed
+    - pre_reading_defaults_to_polished_structured_guide
+    - research_process_and_debug_notes_are_absent_from_reading_body
   scope:
     - pre_reading_does_not_claim_full_text_access
     - text_claims_have_locators
-    - renderer_adds_no_new_claims
+    - obsidian_rendering_adds_no_new_claims
 failure_conditions:
   - ambiguous_identity_released_as_final
   - invented_bibliographic_metadata
@@ -35,3 +67,12 @@ failure_conditions:
   - generic_history_overview
   - chapter_summary_drift
   - generic_reading_advice
+  - pre_reading_writes_obsidian_without_confirmation
+  - shelf_update_time_used_as_progress
+  - incomplete_book_runs_post_reading
+  - partial_notes_claimed_as_complete
+  - user_disagreement_recorded_as_consensus
+  - api_key_written_to_output_or_repository
+  - legacy_v1_skill_is_still_discoverable
+  - output_topic_auto_adopted_or_written_without_consent
+  - unrelated_sensitive_profile_data_exposed_in_topic_rationale

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Work Map"
+  short_description: "Map a book's task, structure, concepts, and limits"
+  default_prompt: "Use $work-map to map what this book provides without reducing it to a summary."

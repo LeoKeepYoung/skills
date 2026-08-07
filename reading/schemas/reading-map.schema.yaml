@@ -1,0 +1,467 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://example.local/reading/reading-map.schema.yaml"
+title: ReadingMapIR
+type: object
+required:
+  - identity
+  - routing
+  - context
+  - author
+  - work
+  - entry
+  - evidence
+  - uncertainty
+  - quality
+properties:
+  identity:
+    type: object
+    required:
+      - title_zh
+      - title_original
+      - author
+      - first_publication_year
+      - work_form
+      - edition_note
+      - identification_confidence
+      - analysis_scope
+    properties:
+      title_zh:
+        type: string
+        minLength: 1
+      title_original:
+        type:
+          - string
+          - "null"
+      author:
+        type: string
+        minLength: 1
+      first_publication_year:
+        type:
+          - integer
+          - "null"
+      work_form:
+        enum:
+          - novel
+          - essays
+          - memoir
+          - philosophy
+          - method
+          - textbook
+          - other
+      edition_note:
+        type:
+          - string
+          - "null"
+      identification_confidence:
+        type: number
+        minimum: 0
+        maximum: 1
+      analysis_scope:
+        enum:
+          - metadata_only
+          - pre_reading
+          - text_grounded
+  routing:
+    type: object
+    required:
+      - primary_mode
+      - secondary_mode
+      - reader_promise
+      - context_weight
+      - author_weight
+      - work_weight
+      - routing_reason
+      - confidence
+    properties:
+      primary_mode:
+        enum:
+          - experience
+          - argument
+          - method
+          - knowledge
+      secondary_mode:
+        type:
+          - string
+          - "null"
+        enum:
+          - experience
+          - argument
+          - method
+          - knowledge
+          - null
+      reader_promise:
+        type: string
+        minLength: 1
+      context_weight:
+        type: integer
+        minimum: 1
+        maximum: 100
+      author_weight:
+        type: integer
+        minimum: 1
+        maximum: 100
+      work_weight:
+        type: integer
+        minimum: 1
+        maximum: 100
+      routing_reason:
+        type: string
+        minLength: 1
+      confidence:
+        type: number
+        minimum: 0
+        maximum: 1
+  context:
+    type: object
+    required:
+      - period_and_place
+      - relevant_environment
+      - central_tensions
+      - impact_on_people
+      - bridge_to_book
+      - required_prior_knowledge
+      - context_importance
+    properties:
+      period_and_place:
+        type: string
+      relevant_environment:
+        type: array
+        items:
+          type: string
+      central_tensions:
+        type: array
+        items:
+          type: object
+          required:
+            - side_a
+            - side_b
+            - explanation
+          properties:
+            side_a:
+              type: string
+            side_b:
+              type: string
+            explanation:
+              type: string
+      impact_on_people:
+        type: array
+        items:
+          type: string
+      bridge_to_book:
+        type: array
+        items:
+          type: string
+      required_prior_knowledge:
+        type: array
+        items:
+          type: string
+      context_importance:
+        enum:
+          - essential
+          - helpful
+          - optional
+  author:
+    type: object
+    required:
+      - relevant_life_events
+      - recurring_questions
+      - author_lens
+      - thinking_and_expression_style
+      - links_to_work
+      - limitations
+    properties:
+      relevant_life_events:
+        type: array
+        items:
+          type: object
+          required:
+            - event
+            - relevance_to_book
+            - evidence_level
+          properties:
+            event:
+              type: string
+            relevance_to_book:
+              type: string
+            evidence_level:
+              enum:
+                - fact
+                - accepted_interpretation
+                - system_inference
+      recurring_questions:
+        type: array
+        items:
+          type: string
+      author_lens:
+        type: array
+        items:
+          type: string
+      thinking_and_expression_style:
+        type: array
+        items:
+          type: string
+      links_to_work:
+        type: array
+        items:
+          type: object
+          required:
+            - from
+            - to
+            - relation
+          properties:
+            from:
+              type: string
+            to:
+              type: string
+            relation:
+              type: string
+      limitations:
+        type: array
+        items:
+          type: string
+  work:
+    type: object
+    required:
+      - core_question
+      - reader_promise
+      - central_thesis_or_experience
+      - architecture
+      - key_concepts
+      - reading_focus
+      - likely_misreadings
+      - boundaries
+    properties:
+      core_question:
+        type: string
+      reader_promise:
+        type: string
+      central_thesis_or_experience:
+        type: string
+      architecture:
+        type: array
+        items:
+          type: object
+          required:
+            - section
+            - function
+          properties:
+            section:
+              type: string
+            function:
+              type: string
+      key_concepts:
+        type: array
+        items:
+          type: object
+          required:
+            - concept
+            - plain_explanation
+            - relation_to_other_concepts
+          properties:
+            concept:
+              type: string
+            plain_explanation:
+              type: string
+            relation_to_other_concepts:
+              type: string
+      reading_focus:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      likely_misreadings:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required:
+            - misunderstanding
+            - correction
+          properties:
+            misunderstanding:
+              type: string
+            correction:
+              type: string
+      boundaries:
+        type: array
+        items:
+          type: string
+  entry:
+    type: object
+    required:
+      - one_sentence_positioning
+      - context_author_work_chain
+      - before_reading
+      - while_reading
+      - do_not_force
+      - stop_and_think_questions
+      - transfer_boundary
+    properties:
+      one_sentence_positioning:
+        type: string
+        minLength: 1
+      context_author_work_chain:
+        type: string
+        minLength: 1
+      before_reading:
+        type: array
+        items:
+          type: string
+      while_reading:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      do_not_force:
+        type: array
+        items:
+          type: string
+      stop_and_think_questions:
+        type: array
+        minItems: 1
+        items:
+          type: string
+      transfer_boundary:
+        type: object
+        required:
+          - useful_insight
+          - misuse_risk
+        properties:
+          useful_insight:
+            type: string
+            minLength: 1
+          misuse_risk:
+            type: string
+            minLength: 1
+  evidence:
+    type: array
+    items:
+      type: object
+      required:
+        - claim_id
+        - claim
+        - claim_type
+        - section
+        - source_title
+        - source_url
+        - locator
+        - source_quality
+        - supports
+      properties:
+        claim_id:
+          type: string
+          pattern: "^E[0-9]+$"
+        claim:
+          type: string
+          minLength: 1
+        claim_type:
+          enum:
+            - fact
+            - accepted_interpretation
+            - system_inference
+            - open_question
+        section:
+          enum:
+            - identity
+            - context
+            - author
+            - work
+            - entry
+        source_title:
+          type:
+            - string
+            - "null"
+        source_url:
+          type:
+            - string
+            - "null"
+        locator:
+          type:
+            - string
+            - "null"
+        source_quality:
+          enum:
+            - primary
+            - authoritative
+            - scholarly
+            - editorial
+            - other
+            - none
+        supports:
+          type: array
+          items:
+            type: string
+  uncertainty:
+    type: array
+    items:
+      type: object
+      required:
+        - issue
+        - impact
+        - action
+      properties:
+        issue:
+          type: string
+        impact:
+          type: string
+        action:
+          type: string
+  quality:
+    type: object
+    required:
+      - status
+      - gates
+      - notes
+    properties:
+      status:
+        enum:
+          - pass
+          - blocked
+      gates:
+        type: object
+        required:
+          - gate_0_identity
+          - gate_1_routing
+          - gate_2_evidence
+          - gate_3_causal_links
+          - gate_4_overinterpretation
+          - gate_5_summary_drift
+          - gate_6_reading_value
+          - gate_7_completeness
+        properties:
+          gate_0_identity:
+            enum:
+              - pass
+              - fail
+          gate_1_routing:
+            enum:
+              - pass
+              - fail
+          gate_2_evidence:
+            enum:
+              - pass
+              - fail
+          gate_3_causal_links:
+            enum:
+              - pass
+              - fail
+          gate_4_overinterpretation:
+            enum:
+              - pass
+              - fail
+          gate_5_summary_drift:
+            enum:
+              - pass
+              - fail
+          gate_6_reading_value:
+            enum:
+              - pass
+              - fail
+          gate_7_completeness:
+            enum:
+              - pass
+              - fail
+      notes:
+        type: array
+        items:
+          type: string

@@ -1,0 +1,37 @@
+schema_version: "1.0"
+required_properties:
+  identity:
+    - identification_confidence_gte_0_8
+    - edition_ambiguity_resolved_or_blocked
+    - analysis_scope_declared
+  routing:
+    - confidence_gte_0_75
+    - weights_sum_to_100
+    - every_layer_weight_gt_0
+    - reader_promise_is_not_genre_label
+  evidence:
+    - key_facts_have_sources
+    - interpretations_are_labeled
+    - inferences_name_supporting_facts
+    - conflicts_enter_uncertainty
+  causal_links:
+    - context_to_author_has_mechanism
+    - author_to_work_has_mechanism
+    - context_to_work_has_mechanism
+  reading_value:
+    - has_specific_reading_focus
+    - has_misreading_and_correction
+    - has_observation_question
+    - has_transfer_boundary
+  scope:
+    - pre_reading_does_not_claim_full_text_access
+    - text_claims_have_locators
+    - renderer_adds_no_new_claims
+failure_conditions:
+  - ambiguous_identity_released_as_final
+  - invented_bibliographic_metadata
+  - unsupported_psychological_diagnosis
+  - narrator_equated_with_author
+  - generic_history_overview
+  - chapter_summary_drift
+  - generic_reading_advice

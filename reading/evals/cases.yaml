@@ -1,0 +1,49 @@
+schema_version: "1.0"
+cases:
+  - id: literary-experience
+    book_request:
+      title: 每一句话语都坐着别的眼睛
+      language: zh-CN
+    expected:
+      primary_mode: experience
+      checks:
+        - 解释语言、时代与日常不安全感之间的关系
+        - 避免把作者简化为受害者
+        - 避免鼓励读者复制作品中的不安全感
+        - 未获得正文时不虚构具体意象或篇章
+
+  - id: method-book
+    book_request:
+      title: 金字塔原理
+      language: zh-CN
+    expected:
+      primary_mode: method
+      checks:
+        - Context 与 Author 保持简短
+        - Work 突出模型、练习、场景与边界
+        - 不输出商业史百科
+        - 区分不同版本的内容差异
+
+  - id: argument-book
+    book_request:
+      title: 幸福之路
+      language: zh-CN
+    expected:
+      primary_mode: argument
+      checks:
+        - 提炼概念与论证结构
+        - 区分作者个人经验与普遍主张
+        - 指出论证前提和适用边界
+        - 不把争议解释写成事实
+
+  - id: knowledge-book
+    book_request:
+      title: Designing Data-Intensive Applications
+      language: zh-CN
+    expected:
+      primary_mode: knowledge
+      checks:
+        - 识别前置知识
+        - 建立概念依赖与机制关系
+        - Author 层不喧宾夺主
+        - 不把技术选型写成跨场景的永恒规则

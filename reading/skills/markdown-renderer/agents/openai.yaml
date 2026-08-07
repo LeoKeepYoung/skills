@@ -1,0 +1,4 @@
+interface:
+  display_name: "Markdown Renderer"
+  short_description: "Render ReadingMapIR as stable Obsidian Markdown"
+  default_prompt: "Use $markdown-renderer to render this ReadingMapIR as reading-map.md."

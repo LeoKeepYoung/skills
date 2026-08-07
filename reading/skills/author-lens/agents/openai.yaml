@@ -1,0 +1,4 @@
+interface:
+  display_name: "Author Lens"
+  short_description: "Explain relevant author experiences and lens"
+  default_prompt: "Use $author-lens to explain why this author wrote this work in this way."

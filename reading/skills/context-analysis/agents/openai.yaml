@@ -1,0 +1,4 @@
+interface:
+  display_name: "Context Analysis"
+  short_description: "Connect a book's world, human stakes, and purpose"
+  default_prompt: "Use $context-analysis to explain the world that made this book necessary."

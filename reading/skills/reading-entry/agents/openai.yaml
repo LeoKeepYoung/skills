@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reading Entry"
+  short_description: "Turn analysis into a concrete way to enter a book"
+  default_prompt: "Use $reading-entry to turn the analysis into a concrete way to enter this book."

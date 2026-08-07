@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reading Coach"
+  short_description: "Build evidence-aware maps before reading a book"
+  default_prompt: "Use $reading to build a careful pre-reading map for this book."

@@ -10,9 +10,13 @@ cases:
         - 豆瓣结果绑定具体 subject 页面与版本
         - 豆瓣和微信读书都展示评分与评分人数
         - 微信读书 readingCount 不被误作评分人数
+        - 作者时间轴之前显式介绍作者姓名和核心身份
         - 作品写作区间与出版时间明确区分
+        - 个人连接遍历完整书架、全部可导出个人笔记和 Obsidian 书籍笔记
+        - 与上一本书的重复来源被降权且不机械复用固定三本书
         - 默认使用层级克制、表格紧凑的结构化阅读指南
         - 检索过程与调试信息不出现在读前正文
+        - 数据与不确定性只有一处且位于文末
         - 未确认阅读前不创建 Obsidian 文件
 
   - id: active-reading-confirmation-block
@@ -37,7 +41,11 @@ cases:
       checks:
         - 使用 getprogress 的 0 到 100 精确值
         - 微信读书不可用时采用人工进度并标明来源
-        - 保留受管区块外的用户笔记
+        - 文件名使用一对书名号
+        - 文件不创建 YAML frontmatter 或 Obsidian Properties
+        - 保留我的自由笔记和其他非标准章节内容
+        - 不写入 HTML 管理注释
+        - 数据与不确定性只有一处且位于文末
 
   - id: active-reading-disagreement
     request:
@@ -55,6 +63,7 @@ cases:
       text: 帮我做读后总结
       stage: reading
       progress_percent: 82
+      finish_reading: 0
       manual_completion_confirmed: false
     expected:
       skill: complete-reading
@@ -62,6 +71,19 @@ cases:
         - 报告当前进度
         - 不回扫或生成读后总结
         - 等待完成或明确手动确认
+
+  - id: post-reading-shelf-finished
+    request:
+      text: 书架已经标记读完，开始复盘
+      stage: completed
+      progress_percent: 96
+      finish_reading: 1
+    expected:
+      skill: complete-reading
+      checks:
+        - 按书架 finishReading 标记判定已读完
+        - 保留精确进度 96% 而不改写为 100%
+        - 记录完成判定与精确进度来自不同字段
 
   - id: post-reading-full-review
     request:

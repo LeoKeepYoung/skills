@@ -1,6 +1,6 @@
 ---
 name: prepare-reading
-description: Research a book before reading by resolving the exact edition, comparing Douban and WeRead ratings with rating counts, building an author and creation timeline, and generating a personalized reading strategy from verified contents plus the user's WeRead shelf and notes. Use for book discovery, pre-reading orientation, author background, reading plans, or deciding whether and how to read a book.
+description: Research a book before reading by resolving the exact edition, comparing Douban and WeRead ratings with rating counts, building an author and creation timeline, and generating a personalized reading strategy from verified contents plus the user's complete WeRead shelf, personal notes, and Obsidian book notes. Use for book discovery, pre-reading orientation, author background, reading plans, or deciding whether and how to read a book.
 ---
 
 # Prepare Reading
@@ -37,7 +37,7 @@ description: Research a book before reading by resolving the exact edition, comp
 
 ### 微信读书
 
-先定位并读取已安装 `weread-skills` 的 `SKILL.md`，再从同一目录读取搜索与书籍能力说明（通常为 `search.md`、`book.md`；若安装包使用 `references/`，则读取其中同名文件）；按其最新网关协议调用，不复制或输出凭据。使用书籍搜索并结合作者消歧，记录：
+先定位并读取已安装 `weread-skills` 的 `SKILL.md`，再从同一目录读取搜索、书籍与书架能力说明（通常为 `search.md`、`book.md`、`shelf.md`；若安装包使用 `references/`，则读取其中同名文件）；按其最新网关协议调用，不复制或输出凭据。使用书籍搜索并结合作者消歧，记录：
 
 - `bookId`、书名、作者、封面和 `deepLink`；
 - `newRating` 与 `newRatingCount`；
@@ -45,11 +45,12 @@ description: Research a book before reading by resolving the exact edition, comp
 
 微信读书 `newRating` 为 0–100；展示时同时保留原值，并可换算为 10 分制 `newRating / 10`。不得把 `readingCount` 当作评分人数。搜索无结果时明确标记，不用相似书替代。
 
-精确匹配后，如该书在用户书架或笔记本中，读取阅读数据能力说明并查询目标书精确 `progress`：
+精确匹配后，如该书在用户书架或笔记本中，同时查询书架 `finishReading` 和精确 `progress`：
 
-- `progress == 0` 或没有记录：按常规读前分析处理；
-- `0 < progress < 100`：仍可响应用户明确要求的读前分析，但标为“回溯式读前分析”，保留 `reading` 状态；
-- `progress == 100`：标为“回溯式读前分析”，保留 `completed` 状态，并说明已经具备读后复盘条件。
+- `finishReading == 1`：标为“回溯式读前分析”，状态为 `completed`；精确进度不足 100% 时仍如实展示，并注明完成判定来自书架；
+- 书架未标记读完且 `progress == 100`：标为“回溯式读前分析”，状态为 `completed`；
+- 书架未标记读完且 `0 < progress < 100`：标为“回溯式读前分析”，保留 `reading` 状态；
+- 书架未标记读完且 `progress == 0` 或没有记录：按常规读前分析处理。
 
 回溯式分析默认不读取目标书已有的划线或想法，避免用读后信息重写读前判断；只报告笔记数量和进度状态。只有用户明确要求利用这些内容时才读取。
 
@@ -61,12 +62,14 @@ description: Research a book before reading by resolving the exact edition, comp
 
 联网检索作者或出版社资料、访谈、图书馆/机构资料和可靠研究，输出：
 
-1. 与本书有关的作者身份；
+1. 作者姓名，以及与本书有关的核心身份；
 2. 代表作及年份；
 3. 影响本书的关键事件或阶段及年份区间；
 4. 本书的构思、写作、完成和首次出版区间。
 
-在时间轴中醒目标记本书所处区间。只有出版年时，不得把它改写成完成年份；写作区间来自间接推断时标为“推测区间”并说明依据。完整传记中与本书无关的内容应压缩。
+该节必须先用1个短段明确介绍“作者是谁”：写出姓名、与本书相关的1—3个核心身份、其与主题领域的关系，并可选1—3部代表作。不要让读者从时间轴事件中反推作者身份。
+
+随后在时间轴中醒目标记本书所处区间。只有出版年时，不得把它改写成完成年份；写作区间来自间接推断时标为“推测区间”并说明依据。完整传记中与本书无关的内容应压缩。
 
 随后按 [Context–Author–Work 分析框架](references/context-author-work.md) 建立“事件/环境 → 作者面对的问题 → 作品”的机制链，而不是仅罗列事件。
 
@@ -91,16 +94,41 @@ description: Research a book before reading by resolving the exact edition, comp
 
 ### 查找个人关联
 
-从已安装 `weread-skills` 的真实目录读取书架、笔记和阅读数据能力说明。先获取用户书架与笔记本概览，再从主题、作者、方法、相反观点或知识前置关系中筛选最相关的少量书；只对候选书进一步读取必要笔记。回溯式分析时，默认从候选中排除目标书自身。
+从已安装 `weread-skills` 的真实目录读取书架、笔记和阅读数据能力说明，并使用下列两阶段检索。回溯式分析时，默认排除目标书自身。
+
+#### 全量建立候选索引
+
+1. 调用书架接口，纳入全部电子书和专辑，不只查看最近阅读或熟悉的书；
+2. 对笔记本概览持续分页直到 `hasMore=0`，取得所有有笔记书目；
+3. 对每本有个人笔记的候选书读取全部划线，并把“我的想法/点评”分页取尽；原始私人内容只在本次任务的临时上下文中使用，不落入仓库或索引文件；
+4. 递归枚举 Obsidian 书籍笔记目录下的全部 Markdown 文件，读取文件名、标题、标签、链接和正文；空文件只可提供“拥有此书”的弱关联；
+5. 按标题、作者和 ISBN 尽量合并微信读书与 Obsidian 的同一本书，保留来源标签。
+
+不得用最近读过、笔记最多或前一次已经选中的三本书代替全量扫描。接口失败、分页未完成或 Obsidian 目录不可用时，明确披露覆盖缺口，不声称“结合了全部阅读记录”。
+
+#### 排序、复核与去重复
+
+围绕目标书的核心问题对候选打分，而不是只做标题相似匹配。至少比较：
+
+- 同一主题或概念；
+- 相同方法在不同领域的应用；
+- 能构成反例、边界或相反观点；
+- 需要补充的前置知识；
+- 用户笔记中反复出现且能被具体定位的问题。
+
+读取当前对话中上一本书的连接，并按修改时间扫描 Obsidian 最近 5 份含“`## 读前｜进入这本书`”标准章节的笔记中的“与我的既有阅读连接”。对重复来源降权：与紧邻上一本书最多重复 1 本；只有当它明显优于其他候选、且本次观察角度不同，才允许复用并写明理由。不要为了形式上的不同牺牲真实相关性。
+
+先形成至少 6 个候选（确实不足时可少于 6 个），复核其具体笔记依据后，再选最多 3 条进入成品。
 
 每条关联写明：
 
 - 关联到哪本已读/在读书或哪组笔记；
-- 关联类型与具体理由；
-- 是用户原笔记、事实匹配还是系统推断；
+- 来源是微信读书笔记、Obsidian 书籍笔记、书架事实，还是多源交叉；
+- 一个可定位的笔记观点，以及它如何改变本书的观察角度；
+- 是用户原笔记、事实匹配还是系统推断；只有书架事实而无笔记时降低置信度；
 - 置信度和必要的隐私省略。
 
-找不到可靠关联时直接说明，不为了个性化而制造联系。
+避免“你关注过 X，所以继续关注 Y”这种可以套在多本书上的泛化句式。找不到可靠关联时直接说明，不为了个性化而制造联系。
 
 ### 选择方法
 
@@ -119,9 +147,10 @@ description: Research a book before reading by resolving the exact edition, comp
 
 1. **标题与导读**：以书名为一级标题；下一行用引用块给出阅读定位。若已开读，在同一处简洁显示进度、当前章节和累计时长。
 2. **书籍档案**：用一个紧凑表格呈现版本、作者/译者、出版信息、封面链接，以及豆瓣和微信读书各自的评分与评分人数。
-3. **作者、时代与作品**：用不超过 4 行的时间轴展示关键阶段，醒目标出创作区间；随后用一小段写清“环境 → 作者处境 → 作品”的关系和作者表达意图。
-4. **与你的阅读连接**：最多 3 条，每条写成“已有书/笔记 → 本书的观察角度”，区分用户记录与系统推断，但不大段复述私人笔记。
+3. **作者、时代与作品**：先用1个短段明确写出作者姓名、核心身份、与本书主题的关系和代表作；再用不超过 4 行的时间轴展示关键阶段，醒目标出创作区间；随后用一小段写清“环境 → 作者处境 → 作品”的关系和作者表达意图。
+4. **与你的阅读连接**：最多 3 条，每条写成“已有书/笔记中的具体观点 → 本书的观察角度”，注明来源类型，区分用户记录与系统推断，但不大段复述私人笔记；优先采用跨来源且不与上一本书机械重复的连接。
 5. **阅读路线**：用“阅读范围—阅读重点—阅读提醒”三列表格合并相邻章节。把容易误读处、适用条件和不可直接迁移之处写入对应行的“阅读提醒”，不再单列“误读提醒”或“迁移边界”；表格后给出 3–5 个阅读问题。
+6. **数据与不确定性**：只在文末出现一次，用一两句集中交代覆盖缺口、来源冲突和会改变结论的推断边界。
 
 默认控制在约 1200–1800 个中文字符，根据作品复杂度伸缩。保持版面舒展：标题层级不超过三级，表格不超过两个，段落尽量短，不使用连续多层列表。
 
@@ -129,6 +158,6 @@ description: Research a book before reading by resolving the exact edition, comp
 - 来源链接贴近对应事实，不另设冗长来源清单。
 - 不逐年罗列无关生平，不复述整份目录，不解释检索和工具调用过程。
 - 不把接口字段、质量门禁、Skill 修复或调试结果写进阅读指南。用户明确要求诊断时，也要与阅读正文分开，并服从用户是否展示诊断信息的要求。
-- 保留必要的不确定性，但集中为一两句，不反复插入免责声明。
+- 保留必要的不确定性，但只集中在文末的“数据与不确定性”，不反复插入免责声明。
 
 执行 [质量门禁](../../references/quality-gates.md)。尚未开读时，完成后询问用户是否决定开始阅读；未得到明确确认时，不创建 Obsidian 文件，也不改变状态。已经开读时不再询问是否开始，提示继续读中建档/同步；已经读完时提示可进入读后复盘。仅完成分析本身不创建 Obsidian 文件，也不改变实际状态。

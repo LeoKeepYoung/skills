@@ -1,6 +1,6 @@
 ---
 name: continue-reading
-description: Maintain the active-reading stage for a confirmed book by creating or safely updating one Obsidian Markdown note, syncing exact WeRead progress with manual fallback, and appending discussion snapshots that preserve the user's confusion and genuinely agreed viewpoint. Use after the user confirms they are reading, or when they ask to record progress or discuss the book.
+description: Maintain the active-reading stage for a confirmed book by creating or safely updating one Obsidian Markdown note, syncing exact WeRead progress and shelf completion status with manual fallback, and appending discussion snapshots that preserve the user's confusion and genuinely agreed viewpoint. Use after the user confirms they are reading, or when they ask to record progress or discuss the book.
 ---
 
 # Continue Reading
@@ -20,18 +20,20 @@ description: Maintain the active-reading stage for a confirmed book by creating 
 
 ## 1. 创建或接管书籍文件
 
-默认文件名为 `<书名>.md`。仅移除路径分隔符、控制字符和当前系统不允许的字符，保留中文书名。写入前先检查目标：
+默认文件名为 `《<书名>》.md`。先去掉书名已有的最外层 `《》`，再包裹一对书名号；仅移除路径分隔符、控制字符和当前系统不允许的字符，保留中文书名。写入前先检查目标：
 
-- 文件不存在：从模板创建，状态设为 `reading`，填入读前信息；
-- 文件已存在且是同一本书：保留用户自由笔记，只初始化缺失区块或更新受管区块；
+- 文件不存在：从模板创建，填入读前信息和第一条阅读进度；
+- 文件已存在且是同一本书：保留用户自由笔记，只初始化缺失的标准章节或更新目标章节；
 - 文件已存在但身份不一致：停止并请用户选择新文件名；
 - 不得静默覆盖整份文件。
 
-在 frontmatter 中至少维护书名、作者、状态、豆瓣条目、微信读书 `bookId`、创建/开始/同步时间、进度和进度来源。只修改生命周期协议列出的受管字段。
+若发现旧式 `<书名>.md` 而带书名号的目标文件不存在，读取完整文件并确认身份后迁移为新文件名；若两个文件都存在则停止并请用户选择，不自动合并。
+
+不创建 YAML frontmatter、Obsidian Properties 或 HTML 管理注释。书名、作者、版本、ISBN 和平台链接写入“读前｜进入这本书”；进度、时间、来源和状态语义写入进度表。
 
 ## 2. 同步阅读进度
 
-定位并读取已安装 `weread-skills` 的 `SKILL.md`，再从同一目录读取阅读数据与书籍能力说明（通常为 `readdata.md`、`book.md`；若安装包使用 `references/`，则读取其中同名文件），使用当前已确认的 `bookId` 获取精确进度。
+定位并读取已安装 `weread-skills` 的 `SKILL.md`，再从同一目录读取阅读数据、书籍与书架能力说明（通常为 `readdata.md`、`book.md`、`shelf.md`；若安装包使用 `references/`，则读取其中同名文件），使用当前已确认的 `bookId` 获取精确进度和书架完成标记。
 
 记录一行：
 
@@ -39,16 +41,19 @@ description: Maintain the active-reading stage for a confirmed book by creating 
 日期时间 | 进度 | 当前章节/位置 | 累计时长 | 来源 | 备注
 ```
 
+进度列未读完时写精确百分比；书架已标记读完但精确进度不足 100% 时写成 `96%（已读完）` 这类显示值，避免混淆“百分比”和“完成状态”。
+
 规则：
 
-- 使用阅读数据中的 `progress`（0–100），不要从书架最近更新时间、笔记数或 `finishReading` 猜进度；
+- 使用阅读数据中的 `progress`（0–100）记录精确百分比，不要从书架最近更新时间、笔记数或 `finishReading` 猜百分比；
+- 使用书架 `finishReading == 1` 判定已读完。若精确进度不足 100%，保留该百分比并在备注中注明“按书架标记已读完”；
 - 用章节目录把 `chapterUid` 映射为真实章节名；映射失败时保留位置 ID 并标“章节名未取得”；
 - 累计时长可能为 0 或缺失，只如实记录；
 - 同一时间点与同一进度不重复追加；
 - 微信读书中无此书、接口不可用或用户线下阅读时，请用户提供手动进度，来源写 `manual`；
 - 手动数据不得伪装成微信读书同步结果。
 
-同步后更新 frontmatter 的 `progress_percent`、`progress_source` 和 `last_synced_at`。只有精确进度为 100%，或用户明确确认读完，才提示可以进入读后阶段。
+同步后以最新一行作为当前进度、完成状态、来源和同步时间。书架标记读完、精确进度为 100%，或用户明确确认读完时，提示可以进入读后阶段。
 
 ## 3. 讨论与快照
 
@@ -69,9 +74,10 @@ description: Maintain the active-reading stage for a confirmed book by creating 
 
 ## 4. 安全更新
 
-- 更新前读取完整文件，识别所有受管标记。
-- 只替换对应受管区块或在表格末尾追加行。
-- 保留“我的自由笔记”和受管标记之外的全部内容与顺序。
-- 写后重新读取文件，确认 frontmatter 可解析、标记成对、表格列数一致且链接未损坏。
-- 返回实际文件路径、写入了哪些区块，以及本次进度来源。
+- 更新前读取完整文件，识别所有标准二级标题及它们的顺序。
+- 只替换对应标准章节（从该二级标题到下一个二级标题之前），或在表格末尾追加行。
+- 保留“我的自由笔记”和不属于标准章节的全部用户内容与顺序。
+- 各阶段的数据来源、缺失、冲突和推断边界集中写入文末唯一的“数据与不确定性”，不在各阶段重复建节。
+- 写后重新读取文件，确认标题唯一且顺序正确、没有 YAML frontmatter 或 HTML 管理注释、“数据与不确定性”只出现一次且是最后一个二级章节、表格列数一致且链接未损坏。
+- 返回实际文件路径、写入了哪些章节，以及本次进度来源。
 - 交付前执行质量门禁的 D0–D3；任何关键失败都停止写入并说明原因。

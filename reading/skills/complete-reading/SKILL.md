@@ -1,6 +1,6 @@
 ---
 name: complete-reading
-description: Run a gated post-reading review after a book is truly complete by scanning every WeRead underline and personal idea, separating the user's words from inference, synthesizing learning with prior discussions, conducting three reflective questions, proposing one to three personalized output topics for the user to accept or decline, and optionally recommending follow-up books. Use only when exact progress is 100 percent or the user explicitly confirms completion.
+description: Run a gated post-reading review after a book is complete according to the WeRead shelf finish marker, exact 100 percent progress, or the user's explicit confirmation. Scan every WeRead underline and personal idea, separate the user's words from inference, synthesize learning with prior discussions, conduct three reflective questions, propose one to three personalized output topics for the user to accept or decline, and optionally recommend follow-up books.
 ---
 
 # Complete Reading
@@ -13,10 +13,11 @@ description: Run a gated post-reading review after a book is truly complete by s
 
 以下任一条件成立才可继续：
 
+- 微信读书书架 `finishReading == 1`；
 - 微信读书精确 `progress == 100`；
 - 用户明确说明已经读完，并允许以手动完成状态继续。
 
-书架状态、最近阅读时间、笔记数量、读过标记或大于 99 的模糊值都不能单独触发。未完成时只报告当前进度并等待；微信读书和用户说法冲突时请用户确认采用哪一种状态，并记录来源。
+仅仅出现在书架、最近阅读时间、笔记数量或大于 99 的模糊值都不能单独触发；`finishReading == 1` 可以。若书架已标记读完但精确进度不足 100%，状态仍为 `completed`，同时保留并披露真实百分比，不要求用户再次确认。
 
 ## 1. 回扫全部个人内容
 
@@ -95,15 +96,16 @@ description: Run a gated post-reading review after a book is truly complete by s
 
 ## 7. 落档与完成
 
-只更新书籍文件的读后受管区块，保留用户自由笔记。将状态设为 `completed`，记录完成时间与完成来源。写后检查：
+只更新书籍文件的“读后｜回看与延伸”标准章节，保留用户自由笔记。在进度表中记录完成信号、当时的精确百分比与来源，并在读后章节记录完成时间与完成来源；不得因书架标记读完而把不足 100% 的精确进度改写成 100%。所有阶段的数据来源、缺失、冲突和推断边界都合并到文末唯一的“数据与不确定性”，不在读后章节内再建数据小节。写后检查：
 
 - 数据是否全量分页，失败是否披露；
 - 用户原话、事实和推测是否分层；
 - 三个问题是否有真实回答或明确的“待回答/跳过”；
 - 输出选题是否只有 1～3 个、依据明确，且采纳状态来自用户决定；
 - 推荐是否经过用户选择；
-- 受管标记、frontmatter 和表格是否完整。
+- 标准标题和表格是否完整，且没有 YAML frontmatter 或 HTML 管理注释；
+- “数据与不确定性”是否只有一处，且是文档最后一个二级章节。
 
-若三问尚未结束或输出选题仍待决定，状态可以保持 `completed`，但读后区块标记为“复盘进行中”，下一轮从未完成的交互继续。
+若三问尚未结束或输出选题仍待决定，状态可以保持 `completed`，但读后章节标记为“复盘进行中”，下一轮从未完成的交互继续。
 
 交付前执行质量门禁的 A0–A5；任何关键失败都保持阻断或“复盘进行中”，不得包装成完整复盘。

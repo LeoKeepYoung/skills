@@ -7,7 +7,7 @@ required_properties:
   lifecycle:
     - stage_is_explicitly_routed
     - reading_requires_user_confirmation_and_folder
-    - completion_requires_exact_100_or_manual_confirmation
+    - completion_accepts_shelf_finish_exact_100_or_manual_confirmation
     - no_automatic_cross_stage_execution
   ratings:
     - douban_subject_page_and_edition_are_bound
@@ -16,8 +16,12 @@ required_properties:
     - reading_count_is_not_rating_count
   obsidian:
     - one_book_uses_one_markdown_file
-    - managed_blocks_are_idempotent
-    - user_content_outside_markers_is_preserved
+    - filename_wraps_title_in_one_pair_of_book_title_marks
+    - note_has_no_yaml_frontmatter_or_obsidian_properties
+    - standard_heading_sections_are_idempotent
+    - user_content_outside_standard_sections_is_preserved
+    - html_management_comments_are_absent
+    - one_data_and_uncertainty_section_is_last
     - progress_source_is_explicit
     - disagreement_is_not_rewritten_as_consensus
   post_reading:
@@ -34,6 +38,8 @@ required_properties:
     - identification_confidence_gte_0_8
     - edition_ambiguity_resolved_or_blocked
     - analysis_scope_declared
+  author_context:
+    - author_name_and_core_identity_are_explicit_before_timeline
   routing:
     - confidence_gte_0_75
     - weights_sum_to_100
@@ -55,6 +61,8 @@ required_properties:
     - reading_reminder_contains_misreading_correction_when_needed
     - pre_reading_defaults_to_polished_structured_guide
     - research_process_and_debug_notes_are_absent_from_reading_body
+    - personal_connections_scan_full_shelf_exportable_personal_notes_and_obsidian_book_notes
+    - personal_connections_penalize_unjustified_reuse_from_recent_books
   scope:
     - pre_reading_does_not_claim_full_text_access
     - text_claims_have_locators
@@ -69,6 +77,7 @@ failure_conditions:
   - generic_reading_advice
   - pre_reading_writes_obsidian_without_confirmation
   - shelf_update_time_used_as_progress
+  - shelf_finish_marker_ignored_for_completion
   - incomplete_book_runs_post_reading
   - partial_notes_claimed_as_complete
   - user_disagreement_recorded_as_consensus
@@ -76,3 +85,5 @@ failure_conditions:
   - legacy_v1_skill_is_still_discoverable
   - output_topic_auto_adopted_or_written_without_consent
   - unrelated_sensitive_profile_data_exposed_in_topic_rationale
+  - html_management_comment_written_to_note
+  - data_and_uncertainty_repeated_by_stage

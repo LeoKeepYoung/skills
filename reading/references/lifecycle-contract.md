@@ -17,13 +17,13 @@
 |---|---|---|---|
 | `planned` | 已完成或正在进行读前研究，尚未确认阅读 | 默认 | 研究、比较、制定策略 |
 | `reading` | 用户明确开始/正在阅读 | 用户确认 + Obsidian 目录已确认 | 建档、同步进度、讨论 |
-| `completed` | 书已读完 | 微信读书精确进度 100，或用户明确手动确认 | 回扫、总结、三问、输出选题、可选推荐 |
+| `completed` | 书已读完 | 微信读书书架 `finishReading == 1`、精确进度 100，或用户明确手动确认 | 回扫、总结、三问、输出选题、可选推荐 |
 
 不得根据模型猜测跳过门槛。状态变化要记录时间和来源。
 
 ## 2. 书籍身份
 
-跨阶段保存并优先复用：
+跨阶段在工作上下文中保存并优先复用：
 
 ```yaml
 title: string
@@ -47,61 +47,40 @@ weread_url: string | null
 - 搜索评分字段为 `newRating`（0–100），评分人数为 `newRatingCount`。
 - `readingCount` 是阅读人数，不是评分人数。
 - 精确进度来自阅读数据的 `progress`（0–100）；书架更新时间不是进度。
+- 书架 `finishReading == 1` 是独立的完成信号，足以把状态设为 `completed`。若它与 `progress < 100` 并存，保留真实百分比但按已读完处理，并同时注明两种来源，不把百分比改写成 100%。
 - 全量个人笔记由“划线”和分页的“我的想法/书评”共同组成。
 - 每次同步记录时间；平台数据缺失时写明降级路径。
 - 若响应包含升级提示，停止当前调用并先按官方 Skill 指引升级。
 
 ## 4. 单文件约定
 
-读前内容、进度、讨论与读后复盘共用 `<用户确认的 Obsidian 目录>/<书名>.md`。新文件使用 [book-reading.md](../templates/book-reading.md)。
+读前内容、进度、讨论与读后复盘共用 `<用户确认的 Obsidian 目录>/《<书名>》.md`。若书名已经带最外层 `《》`，先去掉一层再包裹，确保文件名只有一对书名号。新文件使用 [book-reading.md](../templates/book-reading.md)。
 
-### 受管 frontmatter
+笔记不使用 YAML frontmatter、Properties、HTML 管理注释或其他隐藏元数据。书籍身份由文档标题和“读前｜进入这本书”中的作者、ISBN、版本及平台链接共同确认；当前状态与来源从最新进度行和读后章节读取。缺失信息写“未取得”，不能猜测。
 
-仅自动维护：
+### 标准章节
 
-```yaml
-type: reading-note
-title: string
-original_title: string | null
-author: string
-isbn: string | null
-edition: string | null
-status: planned | reading | completed
-douban_subject_id: string | null
-douban_url: string | null
-weread_book_id: string | null
-weread_url: string | null
-cover: string | null
-created_at: ISO-8601 datetime
-reading_started_at: ISO-8601 datetime | null
-completed_at: ISO-8601 datetime | null
-last_synced_at: ISO-8601 datetime | null
-progress_percent: integer | null
-progress_source: weread | manual | null
-completion_source: weread | manual | null
-```
-
-未知值用 `null` 或空字符串，不能猜测。
-
-### 受管区块
-
-模板用成对 HTML 注释标记四个区块：
+模板使用下列精确的二级标题界定章节：
 
 ```text
-reading:pre
-reading:progress
-reading:discussion
-reading:post
+## 读前｜进入这本书
+## 读中｜阅读进度
+## 读中｜讨论快照
+## 我的自由笔记
+## 读后｜回看与延伸
+## 数据与不确定性
 ```
+
+“数据与不确定性”每篇文档只出现一次，并且必须是最后一个二级章节。读前、读中和读后的来源、缺失、冲突与推断边界都集中到该章节，不再为每个阶段重复建立小节。
 
 更新规则：
 
-1. 写前读取完整文件并确认开始/结束标记各一个且顺序正确；
-2. 只替换目标区块内部内容；
+1. 写前读取完整文件，确认标准二级标题各出现一次且顺序正确；
+2. 目标章节的边界是它的二级标题到下一个二级标题之前，只替换该范围内容；
 3. 进度和讨论优先追加行，避免重建整张表；
-4. 所有标记外内容均视为用户内容；
-5. 标记损坏时停止并说明，不猜测截断范围；
-6. 写后重新读取并检查 frontmatter、标记和表格。
+4. “我的自由笔记”和不属于标准章节的内容均视为用户内容；
+5. 标题缺失、重复或顺序损坏时停止并说明，不猜测截断范围；
+6. 写后重新读取并检查标题、表格和链接；确认无 HTML 管理注释、“数据与不确定性”只有一处且位于文末，不得重新加入 YAML frontmatter。
 
 ## 5. 证据与时间
 
@@ -113,4 +92,4 @@ reading:post
 
 ## 6. 隐私与最小读取
 
-书架和笔记只用于当前阅读任务。先读取概览，再深入少量相关条目；不得展示与结论无关的私密书单或笔记。落档前省略账号标识、接口凭据和不必要的内部 ID。
+书架和笔记只用于当前阅读任务。普通查询遵循最小读取；生成“与我的既有阅读连接”时，按 Prepare Reading 的规则遍历完整候选与全部可导出个人笔记，但不展示或持久化与结论无关的私密书单、原文和想法。落档前省略账号标识、接口凭据和不必要的内部 ID。

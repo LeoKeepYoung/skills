@@ -25,9 +25,9 @@ description: Orchestrate a book through pre-reading research, active-reading tra
 | 尚未决定阅读；询问值不值得读、作者、背景或怎么读 | 读前 | [Prepare Reading](skills/prepare-reading/SKILL.md) |
 | 已经在读/读完，但明确要求补做读前分析 | 读前（回溯式） | [Prepare Reading](skills/prepare-reading/SKILL.md)，完成后回到实际阶段 |
 | 明确表示开始/正在阅读；要求建档、同步进度或讨论困惑 | 读中 | [Continue Reading](skills/continue-reading/SKILL.md) |
-| 微信读书精确进度为 100%，或用户明确确认已经读完 | 读后 | [Complete Reading](skills/complete-reading/SKILL.md) |
+| 微信读书书架标记为读完、精确进度为 100%，或用户明确确认已经读完 | 读后 | [Complete Reading](skills/complete-reading/SKILL.md) |
 
-一次只读取并执行命中阶段的 Skill。阶段不明时优先从读前开始；不要仅凭书架状态、最近阅读时间或笔记数量推定已经开始或读完。
+一次只读取并执行命中阶段的 Skill。阶段不明时优先从读前开始。书架 `finishReading == 1` 可确认读完；仅仅出现在书架、最近阅读时间变化或存在笔记不能确认读完。
 
 ## 状态转换
 
@@ -35,13 +35,13 @@ description: Orchestrate a book through pre-reading research, active-reading tra
 
 ```text
 planned --用户确认开始阅读且确认 Obsidian 目录--> reading
-reading --微信读书进度 100% 或用户明确确认读完--> completed
+reading --书架标记读完、微信读书进度 100% 或用户明确确认读完--> completed
 ```
 
 - 尚未开读时，读前完成后给出结果并询问用户是否决定开始阅读；未确认时停止。
-- 若精确进度显示已经开读或读完，保留实际状态，把结果标为“回溯式读前分析”，不要再询问是否开始；分别提示可进入读中建档/同步，或已具备读后复盘条件。
+- 若精确进度显示已经开读，或书架/精确进度显示已经读完，保留实际状态，把结果标为“回溯式读前分析”，不要再询问是否开始；分别提示可进入读中建档/同步，或已具备读后复盘条件。
 - 用户确认开始但没有提供 Obsidian 目录时，只询问目录，不创建文件。
-- 达到 100% 时只说明已具备读后复盘条件；除非用户同时要求复盘，否则等待确认。
+- 书架标记读完或精确进度达到 100% 时，只说明已具备读后复盘条件；除非用户同时要求复盘，否则等待确认。
 - 微信读书没有目标书或无法取得进度时，允许用户手动提供进度，并把来源标为 `manual`。
 
 ## 保持同一本书
@@ -58,4 +58,4 @@ reading --微信读书进度 100% 或用户明确确认读完--> completed
 - 不把评分高低直接等同于作品质量，也不把两个平台的评分人数混为一谈。
 - 不编造目录、写作年份、作者意图、划线、用户观点或已达成的一致。
 - 不用摘要代替阅读；所有推断都必须与事实、原笔记和用户原话分开。
-- 更新已有书籍文件时，只改受管区块和明确的受管 frontmatter 字段。
+- Obsidian 书籍文件不使用 YAML frontmatter、笔记属性或 HTML 管理注释；按标准二级标题定位并只更新目标章节，保留“我的自由笔记”和其他用户内容。每篇文档只保留一个位于文末的“数据与不确定性”章节。

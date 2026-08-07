@@ -1,30 +1,7 @@
----
-type: reading-note
-title: "{{ title }}"
-original_title: "{{ original_title }}"
-author: "{{ author }}"
-isbn: "{{ isbn }}"
-edition: "{{ edition }}"
-status: reading
-douban_subject_id: "{{ douban_subject_id }}"
-douban_url: "{{ douban_url }}"
-weread_book_id: "{{ weread_book_id }}"
-weread_url: "{{ weread_url }}"
-cover: "{{ cover }}"
-created_at: "{{ created_at }}"
-reading_started_at: "{{ reading_started_at }}"
-completed_at: null
-last_synced_at: "{{ last_synced_at }}"
-progress_percent: {{ progress_percent }}
-progress_source: "{{ progress_source }}"
-completion_source: null
----
-
 # 《{{ title }}》
 
 {{ cover_markdown }}
 
-<!-- reading:pre:start -->
 ## 读前｜进入这本书
 
 ### 基本信息与双平台评分
@@ -37,7 +14,9 @@ completion_source: null
 > [!note] 版本说明
 > {{ edition_note }}
 
-### 作者与作品时间轴
+### 作者、时代与作品
+
+{{ author_identity_intro }}
 
 | 年份/区间 | 身份、事件或作品 | 与本书的关系 | 证据状态 |
 |---|---|---|---|
@@ -70,32 +49,22 @@ completion_source: null
 2. {{ question_2 }}
 3. {{ question_3 }}
 
-### 读前来源与不确定性
-
-{{ pre_sources_and_uncertainty }}
-<!-- reading:pre:end -->
-
-<!-- reading:progress:start -->
 ## 读中｜阅读进度
 
 | 日期时间 | 进度 | 当前章节/位置 | 累计时长 | 来源 | 备注 |
 |---|---:|---|---:|---|---|
-| {{ progress_time }} | {{ progress_percent }}% | {{ current_location }} | {{ cumulative_time }} | {{ progress_source }} | {{ progress_note }} |
-<!-- reading:progress:end -->
+| {{ progress_time }} | {{ progress_display }} | {{ current_location }} | {{ cumulative_time }} | {{ progress_source }} | {{ progress_note }} |
 
-<!-- reading:discussion:start -->
 ## 读中｜讨论快照
 
 | 时间 | 我的困惑 | 达成一致的观点 | 未决问题/证据 |
 |---|---|---|---|
 |  |  |  |  |
-<!-- reading:discussion:end -->
 
 ## 我的自由笔记
 
-> 此处及其他受管标记之外的内容由我自由维护，Skill 不会覆盖。
+> 本节由我自由维护，Skill 不会覆盖。
 
-<!-- reading:post:start -->
 ## 读后｜回看与延伸
 
 ### 笔记回扫
@@ -133,7 +102,6 @@ completion_source: null
 
 {{ recommendations }}
 
-### 数据完整性与不确定性
+## 数据与不确定性
 
-{{ post_sources_and_uncertainty }}
-<!-- reading:post:end -->
+{{ data_and_uncertainty }}

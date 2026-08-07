@@ -19,6 +19,8 @@
 
 ## 作者、时代与作品
 
+{{ author_identity_intro }}
+
 {{ author_work_timeline }}
 
 {{ creation_context_and_intent }}
@@ -35,10 +37,10 @@
 | {{ reading_range_2 }} | {{ reading_focus_2 }} | {{ reading_reminder_2 }} |
 | {{ reading_range_3 }} | {{ reading_focus_3 }} | {{ reading_reminder_3 }} |
 
-<!-- 按作品结构增减路线行。阅读提醒同时承载容易误读之处、适用条件和迁移边界。 -->
-
 ### 阅读中的问题
 
 {{ reading_questions }}
 
-> **信息边界**：{{ sources_and_uncertainty }}
+## 数据与不确定性
+
+{{ sources_and_uncertainty }}

@@ -10,3 +10,4 @@ Skill 的核心入口文件通常是 `SKILL.md`，可按需要继续补充 `agen
   - [`prepare-reading`](reading/skills/prepare-reading/SKILL.md)：豆瓣与微信读书检索、作者/创作背景和个性化阅读策略。
   - [`continue-reading`](reading/skills/continue-reading/SKILL.md)：确认阅读后建立 Obsidian 文件、同步进度并沉淀讨论。
   - [`complete-reading`](reading/skills/complete-reading/SKILL.md)：读完后回扫划线与想法、完成总结和三问、推荐输出选题，可选推荐后续书籍。
+- [`distill-text`](distill-text/SKILL.md)：先把网页或长文本精编为独立短文，再按需从用户确认的 Obsidian 知识库和阅读笔记中提供有依据的个人知识输入；一期不处理视频或音频提取。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "文本精编"
+  short_description: "先精编长文本，再按需结合 Obsidian 笔记提供有依据的个人知识输入"
+  default_prompt: "使用 $distill-text 总结这个网页，并结合我确认的 Obsidian 知识库给出相关输入。"

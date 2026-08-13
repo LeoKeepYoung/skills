@@ -32,6 +32,11 @@ required_properties:
     - length_or_formality_alone_is_not_a_problem
   output:
     - no_scores_grades_rankings_or_personality_labels_are_present
+    - the_report_opens_with_a_concise_evidence_supported_takeaway
+    - scope_is_compact_and_visible_before_detailed_findings
+    - findings_use_consistent_numbered_cards_with_short_evidence_and_rewrite_blocks
+    - long_reports_start_with_a_key_findings_summary_before_full_detail
+    - visual_hierarchy_uses_headings_spacing_and_quotes_without_decorative_clutter
     - only_actual_findings_appear_under_thinking_and_expression_sections
     - each_finding_contains_evidence_gap_effect_repair_and_example
     - one_to_three_transferable_actions_are_derived_only_from_actual_findings
@@ -48,3 +53,5 @@ failure_conditions:
   - an_unverified_professional_term_is_presented_as_the_unique_correct_answer
   - a_score_grade_rank_or_stable_personality_judgment_is_output
   - findings_are_invented_to_fill_every_report_section
+  - the_report_buries_the_main_takeaway_beneath_long_scope_or_methodology_text
+  - decorative_emoji_complex_tables_or_repeated_labels_reduce_scanability

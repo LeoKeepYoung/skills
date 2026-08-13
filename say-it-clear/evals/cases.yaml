@@ -17,6 +17,8 @@ cases:
         - 指出最初遗漏目录类型实际导致定位错误
         - 建议首轮明确 GitHub 仓库中的 Skill 目录
         - 不把助理选择错误路径视为用户唯一责任
+        - 首屏先给一句话结论和紧凑范围信息
+        - 使用编号问题卡并以引用块对照原话和改写
 
   - id: broad-label-hides-real-goal
     request:
@@ -127,6 +129,7 @@ cases:
         - 优先归为表达的信息完整性问题
         - 不断言用户当时没有想清楚这些条件
         - 给出一次性说明目标范围格式和排除项的改写
+        - 将多轮证据合并在同一问题卡而非拆成重复问题
 
   - id: reasoning-gap-not-just-wording
     request:
@@ -239,3 +242,24 @@ cases:
         - 允许输出未发现有实际影响的问题
         - 不因句子包含多个约束就诊断主干受阻
         - 不补充通用写作建议凑数
+        - 无问题结果保持紧凑且不显示空的问题章节
+
+  - id: long-report-needs-progressive-disclosure
+    request:
+      text: 用 say-it-clear 复盘这段很长的完整会话
+      target_speaker: user
+      conversation_summary:
+        user_message_count: 45
+        reportable_findings:
+          - 核心术语修正后仍沿用旧概念
+          - 实施约束通过多轮追加才完整显现
+          - 全称范围量词超过实际目的
+          - 一个证据不足的目标漂移疑点
+    expected:
+      checks:
+        - 第一屏先输出一句话结论和关键发现列表
+        - 范围信息保持紧凑且位于详细问题之前
+        - 详细问题使用连续编号和一致的问题卡结构
+        - 原话与改写使用短引用块形成对照
+        - 疑点与已确认问题在视觉和语义上分开
+        - 不使用复杂表格或大量装饰符号堆砌视觉效果

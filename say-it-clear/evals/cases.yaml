@@ -1,0 +1,241 @@
+schema_version: "1.0"
+cases:
+  - id: missing-repository-scope-causes-wrong-path
+    request:
+      text: 分析这段对话里我的思考和表达问题
+      target_speaker: user
+      conversation:
+        - role: user
+          text: 你先找到我的 skill 目录
+        - role: assistant
+          text: 找到了 ~/.codex/skills
+        - role: user
+          text: 是我 GitHub 的 skill 目录
+    expected:
+      checks:
+        - 报告表达问题而非人格或思考能力问题
+        - 指出最初遗漏目录类型实际导致定位错误
+        - 建议首轮明确 GitHub 仓库中的 Skill 目录
+        - 不把助理选择错误路径视为用户唯一责任
+
+  - id: broad-label-hides-real-goal
+    request:
+      text: 复盘我怎样定义了这个 Skill
+      target_speaker: user
+      conversation:
+        - role: user
+          text: 我想找出语言表达不够精炼的地方
+        - role: user
+          text: 我还想分析问题理解是否准确，以及整体思路是否连贯
+        - role: assistant
+          text: 这已经超出单纯精炼
+        - role: user
+          text: 对，重点是思考问题和表达问题
+    expected:
+      checks:
+        - 识别最初问题定义窄于后续真实目标
+        - 说明精炼无法覆盖理解偏移和思路衔接
+        - 建议先列观察对象和交付结果再命名
+        - 不把正常迭代本身视为缺陷
+
+  - id: accurate-paraphrase-without-known-term
+    request:
+      text: 看看我不知道术语时的表达有没有问题
+      target_speaker: user
+      conversation:
+        - role: assistant
+          text: 你想要哪种技术？
+        - role: user
+          text: 就是网页先显示一块灰色轮廓，数据回来后再替换成真实内容，避免页面突然跳动的那种占位效果。
+        - role: assistant
+          text: 你说的是 skeleton screen，也就是骨架屏。
+    expected:
+      checks:
+        - 不把不知道骨架屏术语诊断为思考或表达问题
+        - 指出描述包含外观时序和目的等辨识特征
+        - 可以补充准确术语但不声称原描述失败
+
+  - id: adjacent-terms-need-boundary
+    request:
+      text: 分析我的表达，并给出准确术语
+      target_speaker: user
+      conversation:
+        - role: user
+          text: 我想做一个把用户登录状态永久存在浏览器缓存里的 session。
+        - role: assistant
+          text: 你指 cookie、localStorage，还是服务端 session？
+        - role: user
+          text: 是浏览器关掉再打开仍然保留的一段 token。
+    expected:
+      checks:
+        - 识别 session 浏览器缓存和 token 混用造成歧义
+        - 根据后续语境给出持久化客户端存储的候选而非武断唯一答案
+        - 说明 cookie 与 localStorage 的选择仍取决于传输和安全需求
+        - 给出放回原语境的准确描述
+
+  - id: ai-misreads-clear-condition
+    request:
+      text: 诊断我这段对话的问题
+      target_speaker: user
+      conversation:
+        - role: user
+          text: 只修改测试文件，不要改生产代码，也不要提交。
+        - role: assistant
+          text: 我已修改生产实现并提交。
+    expected:
+      checks:
+        - 不报告用户表达不清或思考问题
+        - 指出用户已明确对象禁止项和提交边界
+        - 将结果归因为助理未遵守指令
+        - 允许输出未发现用户问题
+
+  - id: explicit-view-revision-is-coherent
+    request:
+      text: 看我的思路有没有前后矛盾
+      target_speaker: user
+      conversation:
+        - role: user
+          text: 我原本倾向用方案 A，因为实现成本低。
+        - role: assistant
+          text: 新测试显示 A 会丢数据，B 没有这个问题。
+        - role: user
+          text: 这个新证据改变了关键前提，我改选 B；数据完整性比实现成本优先。
+    expected:
+      checks:
+        - 不把观点变化诊断为未说明矛盾
+        - 识别新证据优先级和结论之间的过渡清楚
+        - 不为了填充思考问题栏目而挑错
+
+  - id: missing-premise-causes-rework
+    request:
+      text: 分析我为什么和 AI 来回沟通了很多轮
+      target_speaker: user
+      conversation:
+        - role: user
+          text: 帮我写一个数据导出脚本。
+        - role: assistant
+          text: 已按 CSV 导出全部记录。
+        - role: user
+          text: 我只要最近 30 天，而且要 XLSX。
+        - role: assistant
+          text: 已修改。
+        - role: user
+          text: 还要排除已删除账户，这个是必须的。
+    expected:
+      checks:
+        - 识别关键范围格式和过滤条件分散补充造成返工
+        - 优先归为表达的信息完整性问题
+        - 不断言用户当时没有想清楚这些条件
+        - 给出一次性说明目标范围格式和排除项的改写
+
+  - id: reasoning-gap-not-just-wording
+    request:
+      text: 找出我的思考问题
+      target_speaker: user
+      conversation:
+        - role: assistant
+          text: 为什么你认为新功能提高了留存？
+        - role: user
+          text: 上线后日活上涨了，所以肯定是新功能提高了留存。
+        - role: assistant
+          text: 同期还有营销活动，而且你只有日活数据，没有留存 cohort。
+    expected:
+      checks:
+        - 识别从日活相关变化直接推出功能导致留存提升的证据越界
+        - 归为思考问题而非只改写措辞
+        - 建议区分日活与留存并控制同期因素
+        - 示例保留不确定性而非换一个更委婉的肯定句
+
+  - id: ambiguous-whether-thought-or-expression
+    request:
+      text: 分析这轮里的问题
+      target_speaker: user
+      conversation:
+        - role: user
+          text: 我想看回答准确度。
+        - role: assistant
+          text: 你说的准确度是事实正确、理解问题准确，还是回答完整？
+    expected:
+      checks:
+        - 确认准确度存在多个合理解释
+        - 不确定用户尚未区分概念还是已经区分但没写清
+        - 将两种可能和对应修复方式分开说明
+        - 不武断报告概念混淆
+
+  - id: context-makes-short-reply-clear
+    request:
+      text: 复盘我的表达
+      target_speaker: user
+      conversation:
+        - role: assistant
+          text: 我接下来把分类表和证据门槛继续细化，可以吗？
+        - role: user
+          text: 是的，继续。
+    expected:
+      checks:
+        - 不把短句或省略诊断为信息缺失
+        - 识别承接对象在紧邻上下文中唯一
+        - 允许输出未发现问题
+
+  - id: high-risk-repetition-is-functional
+    request:
+      text: 看看我有没有说得太重复
+      target_speaker: user
+      conversation:
+        - role: user
+          text: 只做只读诊断，不要修改生产数据。再次确认：任何删除或写入都不在授权范围内。
+    expected:
+      checks:
+        - 不把安全边界的必要重申当成无效冗余
+        - 识别两句分别表达允许动作与明确禁止项
+        - 不机械追求更短
+
+  - id: another-speaker-analysis-is-out-of-scope
+    request:
+      text: 用这个 Skill 分析对方是不是思维混乱
+      target_speaker: other
+      conversation:
+        - role: user
+          text: 这是我同事和 AI 的聊天记录。
+    expected:
+      checks:
+        - 说明 Skill 只复盘用户明确请求的自身外显思考与表达
+        - 不推断他人人格心理或认知能力
+        - 不输出对方的问题清单
+
+  - id: ordinary-rewrite-should-not-trigger
+    request:
+      text: 把这封邮件写得更简洁专业
+      source_type: single_text
+    expected:
+      checks:
+        - 不触发完整会话诊断流程
+        - 不输出思考问题或表达问题报告
+        - 交给普通写作或编辑能力
+
+  - id: truncated-history-limits-claim
+    request:
+      text: 分析我的完整会话，但前半段聊天已经被截断了
+      target_speaker: user
+      conversation_coverage: partial
+    expected:
+      checks:
+        - 披露前半段缺失
+        - 只分析可见范围中的具体问题
+        - 不判断初始目标或跨会话长期模式
+        - 在缺失会改变归因时保留疑点而非肯定结论
+
+  - id: no-problem-is-valid
+    request:
+      text: 分析我的思考和表达
+      target_speaker: user
+      conversation:
+        - role: assistant
+          text: 你希望修改哪一部分，约束是什么？
+        - role: user
+          text: 只修改 README 中的安装步骤，保留现有示例，不改代码；完成后运行链接检查，但不要提交。
+    expected:
+      checks:
+        - 允许输出未发现有实际影响的问题
+        - 不因句子包含多个约束就诊断主干受阻
+        - 不补充通用写作建议凑数

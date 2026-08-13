@@ -1,0 +1,50 @@
+schema_version: "1.0"
+required_properties:
+  scope:
+    - only_the_explicitly_selected_user_is_diagnosed
+    - current_context_pasted_role_dialogue_and_exported_chat_text_are_supported
+    - incomplete_or_truncated_material_is_disclosed
+    - code_logs_configs_system_messages_and_quoted_others_are_not_language_diagnosis_targets
+    - single_conversation_findings_are_not_presented_as_long_term_traits
+  workflow:
+    - conversation_goal_and_turn_timeline_are_reconstructed_before_diagnosis
+    - individual_replies_adjacent_turns_and_whole_conversation_are_all_considered
+    - candidate_findings_are_rechecked_against_later_clarification_and_outcomes
+    - related_surface_findings_are_merged_under_one_root_cause
+  classification:
+    - thinking_problems_require_evidence_of_a_content_reasoning_or_understanding_gap
+    - expression_problems_require_context_support_for_a_stable_intended_meaning
+    - knowledge_gaps_are_not_automatically_treated_as_thinking_problems
+    - ai_misunderstanding_is_not_automatically_attributed_to_the_user
+    - ambiguous_attribution_preserves_multiple_explanations
+  evidence:
+    - every_reported_problem_has_locatable_conversation_evidence
+    - every_reported_problem_explains_actual_effect_on_understanding_or_progress
+    - reasonable_alternative_causes_are_considered
+    - unsupported_signals_are_omitted_or_marked_as_unresolved
+    - ai_acceptance_praise_or_correction_is_not_the_sole_evidence
+  expression:
+    - word_choice_is_one_expression_scenario_not_a_top_level_diagnosis
+    - inaccurate_wording_includes_an_accurate_alternative_and_usage_boundary
+    - unknown_but_effective_descriptive_paraphrase_is_not_flagged
+    - rewrites_preserve_facts_conditions_stance_politeness_and_uncertainty
+    - short_or_colloquial_language_is_not_flagged_when_context_is_unambiguous
+    - length_or_formality_alone_is_not_a_problem
+  output:
+    - no_scores_grades_rankings_or_personality_labels_are_present
+    - only_actual_findings_appear_under_thinking_and_expression_sections
+    - each_finding_contains_evidence_gap_effect_repair_and_example
+    - one_to_three_transferable_actions_are_derived_only_from_actual_findings
+    - no_problem_is_a_valid_result_without_generic_filler_advice
+    - unresolved_but_material_questions_are_separated_from_diagnoses
+failure_conditions:
+  - another_participant_is_diagnosed_without_explicit_selection
+  - an_ai_error_is_blamed_on_the_user_without_independent_evidence
+  - sentence_length_colloquialism_or_single_occurrence_is_treated_as_sufficient_proof
+  - a_knowledge_gap_is_presented_as_weak_thinking
+  - later_clarification_is_ignored_when_reconstructing_intent
+  - a_possible_intention_is_presented_as_certain_without_context_support
+  - a_rewrite_changes_the_users_position_constraints_or_uncertainty
+  - an_unverified_professional_term_is_presented_as_the_unique_correct_answer
+  - a_score_grade_rank_or_stable_personality_judgment_is_output
+  - findings_are_invented_to_fill_every_report_section

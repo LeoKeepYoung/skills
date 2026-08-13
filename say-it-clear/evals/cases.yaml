@@ -243,6 +243,7 @@ cases:
         - 不因句子包含多个约束就诊断主干受阻
         - 不补充通用写作建议凑数
         - 无问题结果保持紧凑且不显示空的问题章节
+        - 不因用户要求可选推荐就强行加入习惯术语或书籍
 
   - id: long-report-needs-progressive-disclosure
     request:
@@ -263,3 +264,45 @@ cases:
         - 原话与改写使用短引用块形成对照
         - 疑点与已确认问题在视觉和语义上分开
         - 不使用复杂表格或大量装饰符号堆砌视觉效果
+
+  - id: recommendations-map-to-real-findings
+    request:
+      text: 复盘我的思考和表达，并给一些习惯、专业名词或书籍建议
+      target_speaker: user
+      conversation:
+        - role: assistant
+          text: 你确定已经区分工具注册和模型可见性了吗？
+        - role: user
+          text: 动态加载 Tool 懂了，就是工具早已注册，只是在需要时才把 Schema 暴露给模型。
+        - role: assistant
+          text: 机制理解正确；不过准确名称应是动态暴露 Tool Schema，不是动态加载 Tool。
+        - role: user
+          text: 你来优化教材吧。
+        - role: assistant
+          text: 你希望采用哪些建议，哪些不做，怎样验收？
+        - role: user
+          text: 除了第 7、8 项其他都做，完成后检查调用链和交互。
+    expected:
+      checks:
+        - 结合后续纠正确认机制理解正确但动态加载这一标签不准确
+        - 不把后一条实施指令误判为范围缺失
+        - 习惯建议包含触发时机具体动作和完成信号
+        - 可推荐动态暴露 Schema 或验收标准等直接相关概念并说明边界
+        - 书籍只有在能说明作者相关理由和具体阅读入口时才出现
+        - 不强制把习惯概念书籍三类全部填满
+
+  - id: no-generic-book-list-for-minor-issue
+    request:
+      text: 分析我的表达，也可以推荐书
+      target_speaker: user
+      conversation:
+        - role: assistant
+          text: 你想评估事实正确性、问题理解还是回答完整性？
+        - role: user
+          text: 我说的准确度就是想看那个准确度。
+    expected:
+      checks:
+        - 识别准确度仍有多个合理解释
+        - 给出先明确评价维度的具体修复
+        - 允许只给一项概念或练习建议而不推荐书籍
+        - 不机械推荐金字塔原理思考快与慢或其他通用热门书

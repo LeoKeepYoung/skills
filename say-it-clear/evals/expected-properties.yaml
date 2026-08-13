@@ -39,7 +39,11 @@ required_properties:
     - visual_hierarchy_uses_headings_spacing_and_quotes_without_decorative_clutter
     - only_actual_findings_appear_under_thinking_and_expression_sections
     - each_finding_contains_evidence_gap_effect_repair_and_example
-    - one_to_three_transferable_actions_are_derived_only_from_actual_findings
+    - two_to_four_optional_recommendations_are_derived_only_from_actual_findings
+    - habit_practices_include_trigger_action_completion_signal_and_finding_link
+    - professional_concepts_include_definition_current_use_and_relevant_boundaries
+    - books_or_resources_include_verified_title_author_relevance_and_a_specific_reading_entry
+    - recommendation_categories_are_omitted_when_they_do_not_add_value
     - no_problem_is_a_valid_result_without_generic_filler_advice
     - unresolved_but_material_questions_are_separated_from_diagnoses
 failure_conditions:
@@ -55,3 +59,6 @@ failure_conditions:
   - findings_are_invented_to_fill_every_report_section
   - the_report_buries_the_main_takeaway_beneath_long_scope_or_methodology_text
   - decorative_emoji_complex_tables_or_repeated_labels_reduce_scanability
+  - generic_habits_popular_books_or_professional_terms_are_added_only_to_fill_sections
+  - a_single_conversation_is_used_to_assert_a_stable_bad_habit
+  - an_unverified_book_chapter_author_or_professional_term_is_presented_as_fact

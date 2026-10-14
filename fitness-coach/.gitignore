@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+tokens/
+snapshots/
+latest.json
+garmin_tokens.json

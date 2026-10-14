@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fitness Coach · 减脂增肌"
+  short_description: "结合个人训练条件与 Garmin 活动和恢复数据，制定减脂增肌计划并逐周复盘"
+  default_prompt: "使用 $fitness-coach，以减脂增肌为目标，结合我的训练条件和可获取的 Garmin 数据制定计划，并根据实际训练与恢复情况调整。"

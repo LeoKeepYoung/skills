@@ -1,0 +1,4 @@
+interface:
+  display_name: "个人健身计划"
+  short_description: "根据个人目标、时间与器械制定健身计划，记录训练并逐周复盘调整"
+  default_prompt: "使用 $personal-fitness，根据我的目标、训练经验和时间安排，制定可执行的健身计划，并建立训练记录与每周复盘方式。"
